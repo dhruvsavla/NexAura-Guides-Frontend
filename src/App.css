@@ -1,0 +1,8 @@
+/* src/App.css */
+/* You can remove all the old styles from App.css */
+/* Keep any global styles here, or just leave it empty if LandingPage.css handles everything */
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}

@@ -1,0 +1,33 @@
+/* src/index.css */
+
+/* --- Color Variables from the NexAura logo --- */
+:root {
+  --bg-dark: #000000;
+  --bg-light: #1a1a1a;
+  --bg-card: #222;
+  --border-color: #333;
+  --text-primary: #F5F5F5;
+  --text-secondary: #AAAAAA;
+  --brand-pink: #B42A6D;
+  --brand-red: #D93B3B;
+  --brand-orange: #E87C32;
+  --brand-yellow: #F0B94A;
+  --brand-gradient: linear-gradient(90deg, var(--brand-red) 0%, var(--brand-orange) 50%, var(--brand-yellow) 100%);
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* Add this to apply the theme to all pages */
+  background-color: var(--bg-dark);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

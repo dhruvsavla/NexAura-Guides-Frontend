@@ -1,0 +1,127 @@
+/* src/components/GuideCard.css */
+.guide-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer; /* <-- 1. Add pointer cursor */
+  }
+  
+  .guide-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+  
+  .guide-card-title {
+    font-size: 22px;
+    color: var(--text-primary);
+    margin: 0 0 8px 0;
+  }
+  
+  .guide-card-shortcut {
+    font-family: monospace;
+    font-size: 16px;
+    background-color: var(--bg-light);
+    color: var(--brand-orange);
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+  
+  .guide-card-description {
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  
+  .guide-card-steps {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+  
+  /* --- 2. ADD ALL THESE NEW STYLES --- */
+  
+  .guide-card.expanded {
+    /* Optional: make the expanded card slightly larger */
+    transform: scale(1.02);
+  }
+  
+  .guide-card-steps-list {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+  }
+  
+  .guide-card-steps-list h4 {
+    font-size: 16px;
+    color: var(--text-primary);
+    margin: 0 0 10px 0;
+    font-weight: 600;
+  }
+  
+  .guide-card-steps-list ol {
+    margin: 0;
+    padding-left: 20px; /* Indent the list */
+    color: var(--text-secondary);
+  }
+  
+  .guide-card-steps-list li {
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 10px;
+  }
+  
+  .guide-card-steps-list li:last-child {
+    margin-bottom: 0;
+  }
+
+  /* src/components/GuideCard.css */
+
+/* ... (all your existing styles are above this) ... */
+
+/* --- ADD THESE NEW STYLES --- */
+
+.guide-card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+  }
+  
+  .guide-card-expand-btn,
+  .guide-card-delete-btn {
+    border: none;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .guide-card-expand-btn {
+    background-color: var(--border-color);
+    color: var(--text-primary);
+  }
+  
+  .guide-card-expand-btn:hover {
+    background-color: #444;
+  }
+  
+  .guide-card-delete-btn {
+    background-color: transparent;
+    color: var(--brand-red);
+    border: 1px solid var(--brand-red);
+    margin-left: auto; /* Pushes it to the right */
+  }
+  
+  .guide-card-delete-btn:hover {
+    background-color: rgba(217, 59, 59, 0.1);
+    color: #ff8a8a;
+    border-color: #ff8a8a;
+  }

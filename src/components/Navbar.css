@@ -1,0 +1,94 @@
+/* src/components/Navbar.css */
+/* This is mostly from your LandingPage.css */
+
+.header {
+    background: rgba(0, 0, 0, 0.8);
+    border-bottom: 1px solid var(--border-color, #333);
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+  }
+  
+  .header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .header .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+  
+  .header .logo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+  }
+  
+  .header .logo h1 {
+    font-size: 24px;
+    margin: 0;
+    color: var(--text-primary, #f5f5f5);
+    font-weight: 500;
+  }
+  
+  .header .logo h1 .logo-highlight {
+    color: var(--brand-yellow, #F0B94A);
+  }
+  
+  .header nav {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  
+  .header nav a {
+    text-decoration: none;
+    color: var(--text-secondary, #aaa);
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  
+  .header nav a:hover {
+    color: var(--brand-orange, #E87C32);
+  }
+  
+  /* Buttons (copied from LandingPage.css) */
+  .cta-button {
+    padding: 10px 20px; /* Made slightly smaller for navbar */
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .cta-button.primary {
+    background: var(--brand-gradient, linear-gradient(90deg, #D93B3B 0%, #E87C32 50%, #F0B94A 100%));
+    color: white;
+    box-shadow: 0 4px 20px rgba(232, 124, 50, 0.25);
+  }
+  
+  .cta-button.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(232, 124, 50, 0.35);
+  }
+  
+  .cta-button.secondary {
+    background: var(--border-color, #333);
+    color: var(--text-primary, #f5f5f5);
+  }
+  
+  .cta-button.secondary:hover {
+    background: #444;
+  }

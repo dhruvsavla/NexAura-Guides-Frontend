@@ -1,0 +1,57 @@
+{
+  "manifest_version": 3,
+  "name": "NexAura",
+  "version": "1.0",
+  "description": "Chatbot that can see your screen and help with UI actions",
+
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs",
+    "storage"
+  ],
+
+  "host_permissions": [
+    "http://127.0.0.1:8000/*"
+  ],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "action": {
+    "default_title": "NexAura",
+    "default_icon": {
+      "16": "icons/Logo.png",
+      "48": "icons/Logo.png",
+      "128": "icons/Logo.png"
+    },
+    "default_popup": "popup.html"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  
+
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "panel.html",
+        "panel.js",
+        "icons/Logo.png"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+
+  "icons": {
+    "16": "icons/Logo.png",
+    "48": "icons/Logo.png",
+    "128": "icons/Logo.png"
+  }
+}

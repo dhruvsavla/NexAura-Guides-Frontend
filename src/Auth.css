@@ -1,0 +1,121 @@
+/* src/pages/Auth.css */
+
+/* Use the same theme variables from your landing page */
+:root {
+    --bg-dark: #000000;
+    --bg-light: #1a1a1a;
+    --bg-card: #222;
+    --border-color: #333;
+    --text-primary: #F5F5F5;
+    --text-secondary: #AAAAAA;
+    --brand-pink: #B42A6D;
+    --brand-red: #D93B3B;
+    --brand-orange: #E87C32;
+    --brand-yellow: #F0B94A;
+    --brand-gradient: linear-gradient(90deg, var(--brand-red) 0%, var(--brand-orange) 50%, var(--brand-yellow) 100%);
+  }
+  
+  .auth-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: var(--bg-dark);
+    padding: 40px 20px;
+    box-sizing: border-box;
+  }
+  
+  .auth-container {
+    width: 100%;
+    max-width: 440px;
+    padding: 40px;
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  }
+  
+  .auth-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: 0;
+    margin-bottom: 30px;
+  }
+  
+  .auth-title .logo-highlight {
+    color: var(--brand-yellow);
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  
+  .form-group input:focus {
+    outline: none;
+    border-color: var(--brand-orange);
+    box-shadow: 0 0 0 3px rgba(232, 124, 50, 0.3);
+  }
+  
+  .auth-button {
+    width: 100%;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  
+  .auth-error, .auth-success {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 500;
+  }
+  
+  .auth-error {
+    background-color: rgba(217, 59, 59, 0.1);
+    color: #ff8a8a;
+    border: 1px solid var(--brand-red);
+  }
+  
+  .auth-success {
+    background-color: rgba(240, 185, 74, 0.1);
+    color: #f0c37a;
+    border: 1px solid var(--brand-yellow);
+  }
+  
+  .auth-switch {
+    text-align: center;
+    margin-top: 25px;
+    color: var(--text-secondary);
+  }
+  
+  .auth-switch a {
+    color: var(--brand-orange);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  
+  .auth-switch a:hover {
+    text-decoration: underline;
+  }

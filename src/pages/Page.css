@@ -1,0 +1,58 @@
+/* src/pages/Page.css */
+
+.page-container {
+    padding: 40px 0;
+  }
+  
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .page-title {
+    font-size: 36px;
+    color: var(--text-primary);
+    margin-bottom: 30px;
+  }
+  
+  .page-error {
+    color: #ff8a8a;
+    background-color: rgba(217, 59, 59, 0.1);
+    border: 1px solid var(--brand-red);
+    padding: 12px;
+    border-radius: 8px;
+  }
+  
+  /* --- Search Form --- */
+  .search-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+  
+  .search-input {
+    flex-grow: 1;
+    padding: 14px;
+    font-size: 16px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  
+  .search-input:focus {
+    outline: none;
+    border-color: var(--brand-orange);
+    box-shadow: 0 0 0 3px rgba(232, 124, 50, 0.3);
+  }
+  
+  
+  /* --- Guide Grid --- */
+  .guide-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+  }
