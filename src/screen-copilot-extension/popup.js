@@ -15,22 +15,25 @@ document.getElementById("toggleChatbot").addEventListener("click", async () => {
   window.close();
 });
 
-
 // === OPEN PANEL AND LET USER RECORD INSIDE PANEL ===
-document.getElementById("recordGuideBtn").addEventListener("click", async () => {
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+document
+  .getElementById("recordGuideBtn")
+  .addEventListener("click", async () => {
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
 
-  if (!tab?.url?.startsWith("http")) {
-    alert("This extension only works on regular websites.");
-    return;
-  }
+    if (!tab?.url?.startsWith("http")) {
+      alert("This extension only works on regular websites.");
+      return;
+    }
 
-  // Just open the panel — recording happens from inside panel.js
-  chrome.tabs.sendMessage(tab.id, { type: "SHOW_IFRAME" });
+    // Just open the panel — recording happens from inside panel.js
+    chrome.tabs.sendMessage(tab.id, { type: "SHOW_IFRAME" });
 
-  window.close();
-});
-
+    window.close();
+  });
 
 // Wake background service worker
 chrome.runtime.sendMessage({ type: "PING" }, () => {});

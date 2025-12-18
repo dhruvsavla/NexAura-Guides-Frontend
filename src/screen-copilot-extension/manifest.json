@@ -4,16 +4,9 @@
   "version": "1.0",
   "description": "Chatbot that can see your screen and help with UI actions",
 
-  "permissions": [
-    "activeTab",
-    "scripting",
-    "tabs",
-    "storage"
-  ],
+  "permissions": ["activeTab", "scripting", "tabs", "storage"],
 
-  "host_permissions": [
-    "http://127.0.0.1:8000/*"
-  ],
+  "host_permissions": ["http://127.0.0.1:8000/*"],
 
   "background": {
     "service_worker": "background.js"
@@ -36,15 +29,10 @@
       "run_at": "document_end"
     }
   ],
-  
 
   "web_accessible_resources": [
     {
-      "resources": [
-        "panel.html",
-        "panel.js",
-        "icons/Logo.png"
-      ],
+      "resources": ["panel.html", "panel.js", "icons/Logo.png"],
       "matches": ["<all_urls>"]
     }
   ],

@@ -1,6 +1,13 @@
 // content.js — page logic + iframe sidebar host
 
 (function () {
+  if (
+    window.location.protocol === "file:" ||
+    document.contentType === "application/pdf"
+  ) {
+    console.debug("NexAura: blocked on PDF/file");
+    return;
+  }
   if (window.nexauraContentInitialized) {
     console.log("NexAura content already initialized");
     return;
@@ -70,7 +77,7 @@
     if (!(el instanceof Element)) return "";
 
     const GOOD_ATTRS = [
-      "gh",           // Gmail internal tag
+      "gh", // Gmail internal tag
       "data-tooltip",
       "aria-label",
       "data-action",
@@ -386,14 +393,11 @@
   }
 
   async function analyzeScreenWithServer(imageBase64, question) {
-    const res = await fetch(
-      "http://127.0.0.1:8000/api/analyze/analyze_live",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image_base64: imageBase64, question }),
-      }
-    );
+    const res = await fetch("http://127.0.0.1:8000/api/analyze/analyze_live", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ image_base64: imageBase64, question }),
+    });
     if (!res.ok) {
       const text = await res.text();
       throw new Error(`Analyze failed: ${res.status} ${text}`);
