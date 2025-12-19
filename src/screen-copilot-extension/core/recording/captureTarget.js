@@ -101,7 +101,7 @@ function buildXPath(el) {
 function buildAncestorTrail(el) {
   const trail = [];
   let node = el.parentElement;
-  while (node && trail.length < 4) {
+  while (node && trail.length < 6) {
     trail.unshift({
       tag: node.tagName.toLowerCase(),
       index: computeSiblingIndex(node),
@@ -151,8 +151,8 @@ function buildFinderSelector(el) {
   try {
     const selector = medvFinder(el, {
       root: document.body,
-      // Prefer data-* and ids, but allow classes if short.
-      className: (name) => name && name.length <= 32,
+      // Prefer stable attributes; reject hashed class tokens.
+      className: (name) => /^[a-z0-9-]{1,24}$/.test(name),
       idName: () => true,
       tagName: () => true,
       attr: (name) => name.startsWith("data-"),
@@ -160,8 +160,35 @@ function buildFinderSelector(el) {
       optimizedMinLength: 2,
       maxNumberOfTries: 5000,
     });
+    if (!selector) return null;
+
+    // If finder only returned a single class/tag (likely unstable), fall back to a structural path.
+    const looksLikeSingleToken = !selector.includes(" ") && !selector.includes(">") && !selector.includes(":nth");
+    if (looksLikeSingleToken) {
+      return buildStructuralPath(el);
+    }
     return selector;
   } catch (e) {
     return null;
   }
+}
+
+function buildStructuralPath(el) {
+  // Build a tag + nth-of-type chain up to a few ancestors to avoid brittle hashed classes.
+  const parts = [];
+  let node = el;
+  let depth = 0;
+  while (node && node.nodeType === 1 && depth < 8 && node !== document.body) {
+    const tag = node.tagName.toLowerCase();
+    let nth = 1;
+    let sib = node.previousElementSibling;
+    while (sib) {
+      if (sib.tagName === node.tagName) nth++;
+      sib = sib.previousElementSibling;
+    }
+    parts.unshift(`${tag}:nth-of-type(${nth})`);
+    node = node.parentElement;
+    depth++;
+  }
+  return parts.join(" > ");
 }

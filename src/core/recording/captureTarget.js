@@ -1,4 +1,5 @@
-import { normalizeText } from "../guideSchema";
+import { normalizeText } from "../guideSchema.js";
+import { finder as medvFinder } from "../locatorEngine/finderLib.js";
 
 export function captureTarget(element, frameInfo = {}) {
   if (!(element instanceof Element)) return null;
@@ -9,6 +10,12 @@ export function captureTarget(element, frameInfo = {}) {
 
   const dataTest = element.getAttribute("data-testid") || element.getAttribute("data-test");
   if (dataTest) locatorList.push({ type: "css", value: `[data-testid="${dataTest}"]`, confidence: 0.85 });
+
+  // Use @medv/finder to generate a unique selector scoped to the page.
+  const finderSelector = buildFinderSelector(element);
+  if (finderSelector) {
+    locatorList.push({ type: "css", value: finderSelector, confidence: 0.75 });
+  }
 
   const ariaLabel = element.getAttribute("aria-label");
   const role = element.getAttribute("role");
@@ -138,4 +145,23 @@ function collectNearbyAnchors(el) {
 function readBBox(el) {
   const r = el.getBoundingClientRect();
   return { x: r.x, y: r.y, width: r.width, height: r.height };
+}
+
+function buildFinderSelector(el) {
+  try {
+    const selector = medvFinder(el, {
+      root: document.body,
+      // Prefer data-* and ids, but allow classes if short.
+      className: (name) => name && name.length <= 32,
+      idName: () => true,
+      tagName: () => true,
+      attr: (name) => name.startsWith("data-"),
+      seedMinLength: 1,
+      optimizedMinLength: 2,
+      maxNumberOfTries: 5000,
+    });
+    return selector;
+  } catch (e) {
+    return null;
+  }
 }

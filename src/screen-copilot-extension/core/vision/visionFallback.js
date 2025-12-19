@@ -3,6 +3,8 @@
 
 let cvReady = null;
 
+// dhruvsavla/nexaura-guides-frontend/.../core/vision/visionFallback.js
+
 function loadOpenCV() {
   if (cvReady) return cvReady;
   cvReady = new Promise((resolve) => {
@@ -11,16 +13,26 @@ function loadOpenCV() {
       return;
     }
     const script = document.createElement("script");
-    script.src = "https://docs.opencv.org/4.x/opencv.js";
+    
+    // CHANGE THIS: Use the local path relative to the manifest root
+    script.src = chrome.runtime.getURL("core/vision/opencv.js");
+    
     script.async = true;
     script.onload = () => {
-      if (window.cv && window.cv.imread) {
-        resolve(window.cv);
+      // OpenCV takes a moment to initialize its WASM runtime
+      if (window.cv) {
+        // If opencv.js uses an onRuntimeInitialized callback, you might need to wait for it
+        window.cv.onRuntimeInitialized = () => resolve(window.cv);
+        // If it's already ready or doesn't use the callback:
+        if (window.cv.imread) resolve(window.cv);
       } else {
         resolve(null);
       }
     };
-    script.onerror = () => resolve(null);
+    script.onerror = (e) => {
+      console.error("Failed to load local OpenCV:", e);
+      resolve(null);
+    };
     document.head.appendChild(script);
   });
   return cvReady;

@@ -1,71 +1,63 @@
 import { normalizeText } from "../guideSchema.js";
 
-export function scoreCandidate({ el, target, frameHref }) {
+/**
+ * Scores an element candidate based on how well it matches the recorded target fingerprint.
+ */
+export function scoreCandidate({ el, target }) {
   if (!el || !target) return 0;
   let score = 0;
   const fp = target.fingerprint || {};
 
-  // Tag / role / aria / text
+  // 1. Tag Match
   if (fp.tag && el.tagName && el.tagName.toLowerCase() === fp.tag) score += 2;
-  if (fp.role) {
-    const role = el.getAttribute("role");
-    if (role && role.toLowerCase() === fp.role) score += 1.5;
-  }
-  if (fp.ariaLabel) {
-    const aria = normalizeText(el.getAttribute("aria-label"));
-    if (aria && aria === normalizeText(fp.ariaLabel)) score += 1.5;
-  }
-  if (fp.text) {
-    const txt = normalizeText(el.textContent || el.value || "");
-    if (txt && (txt.includes(fp.text) || fp.text.includes(txt))) score += 1.2;
-  }
 
-  // Attribute matches (data-testid, id, type, name etc.)
-  if (fp.attrs && typeof fp.attrs === "object") {
-    for (const [key, val] of Object.entries(fp.attrs)) {
-      const candidateVal = el.getAttribute(key);
-      if (candidateVal && normalizeText(candidateVal) === normalizeText(String(val))) {
-        score += 1.2;
+  // 2. Unique Href Match (Extremely powerful for Trello cards)
+  // If the target is a link or contains a link, check if it points to the same card URL.
+  if (target.context?.frame?.href && (el.tagName === 'A' || el.hasAttribute('href'))) {
+    const elHref = el.getAttribute('href');
+    const recordedUrl = target.context.frame.href;
+    if (elHref && recordedUrl) {
+      // Check if current href is a part of the recorded absolute URL or vice versa
+      if (recordedUrl.includes(elHref) || elHref.includes(recordedUrl.split('trello.com')[1] || '___')) {
+        score += 5.0; // Massive boost for matching the unique card identity
       }
     }
   }
 
-  // Class overlap
+  // 3. Attribute Match (Iterate through recorded stable attributes)
+  if (fp.attrs && typeof fp.attrs === "object") {
+    for (const [attrName, attrValue] of Object.entries(fp.attrs)) {
+      const val = el.getAttribute(attrName);
+      if (val && val === attrValue) {
+        score += 2.0; 
+      }
+    }
+  }
+
+  // 4. Text Match
+  if (fp.text) {
+    const txt = normalizeText(el.textContent || el.value || "");
+    if (txt) {
+      if (txt === fp.text) score += 2.5; // Exact match
+      else if (txt.includes(fp.text) || fp.text.includes(txt)) score += 1.2;
+    }
+  }
+
+  // 5. Ancestor Similarity (Determines if it's in the right list/column)
+  if (target.context?.ancestorTrail) {
+    const similarity = computeAncestorSimilarity(el, target.context.ancestorTrail);
+    score += similarity * 3.0; 
+  }
+
+  // 6. Classes and Visibility
   if (fp.classTokens && fp.classTokens.length) {
     const classes = new Set(Array.from(el.classList || []));
     const hits = fp.classTokens.filter((c) => classes.has(c)).length;
-    score += hits * 0.5;
-  }
-
-  // Sibling index proximity
-  const siblingIndex = target.context?.siblingIndex;
-  if (typeof siblingIndex === "number" && el.parentElement) {
-    const children = Array.from(el.parentElement.children);
-    const idx = children.indexOf(el);
-    if (idx >= 0) {
-      const diff = Math.abs(idx - siblingIndex);
-      score += Math.max(1 - diff * 0.25, 0); // small decay
-    }
-  }
-
-  // Ancestor trail similarity
-  const ancTrail = target.context?.ancestorTrail;
-  if (Array.isArray(ancTrail) && ancTrail.length) {
-    const similarity = computeAncestorSimilarity(el, ancTrail);
-    score += similarity * 2; // weight moderately
-  }
-
-  // Frame hint: if frame href matches the recorded frame, give a boost; otherwise penalize.
-  const targetFrameHref = target.context?.frame?.href;
-  if (targetFrameHref) {
-    if (frameHref && sameOriginPrefix(frameHref, targetFrameHref)) {
-      score += 1.5;
-    } else if (frameHref) {
-      score -= 1; // likely wrong frame
-    }
+    score += hits * 0.4;
   }
 
   if (isVisible(el)) score += 1;
+
   return score;
 }
 
@@ -73,8 +65,8 @@ function computeAncestorSimilarity(el, recordedTrail) {
   const actual = [];
   let node = el;
   for (let i = 0; i < recordedTrail.length && node && node.parentElement; i++) {
-    actual.push({ tag: node.tagName?.toLowerCase(), index: getIndex(node) });
     node = node.parentElement;
+    actual.push({ tag: node.tagName?.toLowerCase(), index: getIndex(node) });
   }
   let matches = 0;
   for (let i = 0; i < recordedTrail.length && i < actual.length; i++) {
@@ -93,16 +85,6 @@ function computeAncestorSimilarity(el, recordedTrail) {
 function getIndex(el) {
   if (!el.parentElement) return 0;
   return Array.from(el.parentElement.children).indexOf(el);
-}
-
-function sameOriginPrefix(a, b) {
-  try {
-    const ua = new URL(a);
-    const ub = new URL(b);
-    return ua.origin === ub.origin;
-  } catch (e) {
-    return false;
-  }
 }
 
 export function isVisible(el) {

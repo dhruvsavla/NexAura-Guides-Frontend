@@ -114,15 +114,7 @@ async function getActiveTabId() {
           ">My Guides</button>
         </div>
   
-        <button id="nextStepBtn" style="
-          width:100%;
-          padding:10px;
-          border-radius:8px;
-          border:none;
-          background:#333;
-          color:#ccc;
-          cursor:not-allowed;
-        " disabled>Next step ▶</button>
+        
   
         <button id="sendBtn" style="
           width:100%;
@@ -578,47 +570,51 @@ async function getActiveTabId() {
 
     hydratePanelState();
 
-    nextStepBtn.addEventListener("click", async () => {
-      if (!currentPlaybackGuide) return;
-      const steps = currentPlaybackGuide.steps || [];
+    if (nextStepBtn) {
+      nextStepBtn.addEventListener("click", async () => {
+        if (!currentPlaybackGuide) return;
+        const steps = currentPlaybackGuide.steps || [];
 
-      if (currentPlaybackIndex >= steps.length) {
-        addMessage("bot", "✅ Guide finished.");
-        resetNextStepButton();
-        currentPlaybackGuide = null;
-        currentPlaybackIndex = 0;
-        return;
-      }
-  
-      const step = steps[currentPlaybackIndex];
-      const stepNumber = currentPlaybackIndex + 1;
-      addMessage(
-        "bot",
-        `▶ Step ${stepNumber} of ${steps.length}: <strong>${escapeHtml(
-          step.instruction || ""
-        )}</strong><br/><small>The element on the page will be highlighted — now you click or type there yourself.</small>`
-      );
-  
-      const res = await sendToContent({ type: "EXECUTE_NEXT_PLAYBACK_STEP" });
-      if (!res?.ok) {
+        if (currentPlaybackIndex >= steps.length) {
+          addMessage("bot", "✅ Guide finished.");
+          resetNextStepButton();
+          currentPlaybackGuide = null;
+          currentPlaybackIndex = 0;
+          return;
+        }
+    
+        const step = steps[currentPlaybackIndex];
+        const stepNumber = currentPlaybackIndex + 1;
         addMessage(
           "bot",
-                `<strong>Error highlighting step:</strong> ${escapeHtml(
-            res?.error || "unknown"
-          )}`
+          `▶ Step ${stepNumber} of ${steps.length}: <strong>${escapeHtml(
+            step.instruction || ""
+          )}</strong><br/><small>The element on the page will be highlighted — now you click or type there yourself.</small>`
         );
-        return;
-      }
-  
-      currentPlaybackIndex++;
-      if (currentPlaybackIndex >= steps.length) {
-        nextStepBtn.textContent = "Finish ▶";
-      } else {
-        nextStepBtn.textContent = `Next step (${currentPlaybackIndex + 1}/${
-          steps.length
-        }) ▶`;
-      }
-    });
+    
+        const res = await sendToContent({ type: "EXECUTE_NEXT_PLAYBACK_STEP" });
+        if (!res?.ok) {
+          addMessage(
+            "bot",
+                  `<strong>Error highlighting step:</strong> ${escapeHtml(
+              res?.error || "unknown"
+            )}`
+          );
+          return;
+        }
+    
+        currentPlaybackIndex++;
+        if (currentPlaybackIndex >= steps.length) {
+          nextStepBtn.textContent = "Finish ▶";
+        } else {
+          nextStepBtn.textContent = `Next step (${currentPlaybackIndex + 1}/${
+            steps.length
+          }) ▶`;
+        }
+      });
+    } else {
+      console.warn("Next step button not found in panel UI");
+    }
   
     // ===============
     // CLOSE PANEL

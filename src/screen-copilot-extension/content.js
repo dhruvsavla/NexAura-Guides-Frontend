@@ -307,12 +307,13 @@
     if (!(el instanceof Element)) return "";
 
     const GOOD_ATTRS = [
-      "gh",           // Gmail internal tag
+      "data-testid",
+      "data-test",
+      "gh", // Gmail internal tag
       "data-tooltip",
       "aria-label",
       "data-action",
       "data-id",
-      "role",
       "name",
       "placeholder",
     ];
@@ -448,11 +449,6 @@
     const target = event.target;
     if (!(target instanceof Element)) return;
 
-    const selector = getCssSelector(target);
-    if (!selector) {
-      console.warn("NexAura: couldn't generate selector");
-    }
-
     const rect = target.getBoundingClientRect();
     showLiveHighlight(
       [
@@ -484,6 +480,16 @@
       });
     } catch (e) {
       console.warn("captureTarget failed", e);
+    }
+
+    // Prefer the finder-generated selector if present; otherwise fall back to legacy heuristic.
+    const finderLocator =
+      capturedTarget?.preferredLocators?.find(
+        (l) => l?.type === "css" && l.confidence >= 0.75
+      ) || null;
+    const selector = finderLocator?.value || getCssSelector(target);
+    if (!selector) {
+      console.warn("NexAura: couldn't generate selector");
     }
 
     let action = "click";
@@ -763,6 +769,15 @@
 
   // ---------- playback ----------
   async function startPlayback(guide) {
+    // Require auth token to run guides fetched from backend.
+    const token = await new Promise((resolve) =>
+      chrome.storage.local.get("nexaura_token", (data) => resolve(data?.nexaura_token || null))
+    );
+    if (!token) {
+      alert("Please log in to NexAura before running a guide.");
+      return { ok: false, error: "Not authenticated" };
+    }
+
     let normalized = guide;
     try {
       const { migrateGuide } = await loadModule("core/guideSchema.js");
@@ -775,6 +790,7 @@
     lastHighlightedStepIndex = null;
     await syncSharedState();
     // Panel / overlay will call EXECUTE_NEXT_PLAYBACK_STEP manually
+    return { ok: true };
   }
 
   async function finishPlayback() {
@@ -921,7 +937,27 @@
     });
     if (!res.ok) throw new Error("Failed to fetch guides");
     const guides = await res.json();
-    return guides.map((g) => hydrateGuideScreenshots(g, cache));
+    const userId = getUserIdFromToken(token);
+    let scopedGuides = guides;
+    if (userId) {
+      const filtered = guides.filter((g) => g.owner_id === userId);
+      scopedGuides = filtered.length ? filtered : guides;
+    }
+    return scopedGuides.map((g) => hydrateGuideScreenshots(g, cache));
+  }
+
+  function getUserIdFromToken(token) {
+    try {
+      const parts = token.split(".");
+      if (parts.length < 2) return null;
+      const payload = JSON.parse(
+        atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"))
+      );
+      // common JWT claim names: sub or user_id
+      return payload.sub || payload.user_id || null;
+    } catch (e) {
+      return null;
+    }
   }
 
   async function saveGuideToServer(guide) {

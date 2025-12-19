@@ -28,8 +28,18 @@ function LandingPage() {
           <a href={CHROME_STORE_URL} className="cta-button primary">
             Add to Chrome for Free
           </a>
-          <div className="hero-image-placeholder">
-            [Animated GIF or video showing NexAura in action]
+          <div className="hero-visual">
+            <video
+              className="hero-video"
+              src="/NexAura_Browser_Extension_Demo.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls
+            >
+              Your browser does not support the video tag.
+            </video>
           </div>
         </div>
       </section>
