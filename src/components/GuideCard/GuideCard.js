@@ -67,7 +67,7 @@ const GuideCard = ({
     if (!onEdit) return;
     onEdit(guide);
   };
-  const hasActions = showDelete || showDownload || (isOwner && onShare) || onEdit;
+  const hasActions = showDelete || showDownload || (isOwner && onShare) || (isOwner && onEdit);
   const renderBadge = () => {
     if (guide.is_public) {
       return <div className="guide-badge public">Public</div>;
@@ -127,7 +127,7 @@ const GuideCard = ({
             </button>
           )}
 
-          {onEdit && (
+          {isOwner && onEdit && (
             <button
               className="guide-card-edit-btn"
               onClick={handleEditClick}

@@ -102,9 +102,9 @@ const ShareModal = ({ guide, token, onClose, onUpdate }) => {
 
       if (!response.ok) throw new Error('Failed to generate share link');
       const data = await response.json();
-      const link = `${window.location.origin}/share?token=${data.token}`;
+      const link = `${window.location.origin}/share?token=${data.share_token}`;
       setShareLink(link);
-      onUpdate && onUpdate({ ...guide, share_token: data.token });
+      onUpdate && onUpdate({ ...guide, share_token: data.share_token });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -143,6 +143,7 @@ const ShareModal = ({ guide, token, onClose, onUpdate }) => {
           </label>
         </div>
 
+      {!isPublic && (
         <div className="share-section">
           <h3>Shared with</h3>
           <form onSubmit={handleAddEmail} className="email-form">
@@ -170,7 +171,7 @@ const ShareModal = ({ guide, token, onClose, onUpdate }) => {
             ))}
           </ul>
         </div>
-
+      )}
         <div className="share-section">
           <h3>Share Link</h3>
           {!shareLink ? (
