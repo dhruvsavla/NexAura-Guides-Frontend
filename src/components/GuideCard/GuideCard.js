@@ -67,7 +67,7 @@ const GuideCard = ({
     if (!onEdit) return;
     onEdit(guide);
   };
-
+  const hasActions = showDelete || showDownload || (isOwner && onShare) || onEdit;
   const renderBadge = () => {
     if (guide.is_public) {
       return <div className="guide-badge public">Public</div>;
@@ -78,7 +78,6 @@ const GuideCard = ({
     return <div className="guide-badge private">Private</div>;
   };
 
-  const hasActions = showDelete || showDownload || (isOwner && onShare) || onEdit;
   return (
     <div
       className={`guide-card ${isExpanded ? 'expanded' : ''}`}

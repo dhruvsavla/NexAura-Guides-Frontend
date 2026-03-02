@@ -15,18 +15,6 @@ const MyGuides = () => {
   const [editingGuide, setEditingGuide] = useState(null);
   const { token } = useAuth();
 
-  const getCurrentUserId = (token) => {
-    if (!token) return null;
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.sub || payload.user_id;
-    } catch (e) {
-      return null;
-    }
-  };
-
-  const currentUserId = getCurrentUserId(token);
-
   useEffect(() => {
     const fetchGuides = async () => {
       if (!token) {
@@ -177,7 +165,7 @@ const MyGuides = () => {
               onDelete={handleDeleteGuide}
               showDownload={true}
               onDownload={handleDownloadGuide}
-              isOwner={String(guide.owner_id) === String(currentUserId)}
+              isOwner={guide.is_owner}
               onShare={handleShareGuide}
               onEdit={handleEditGuide}
             />
