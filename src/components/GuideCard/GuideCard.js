@@ -1,18 +1,7 @@
 // src/components/GuideCard.js
 import React, { useState } from 'react';
-import '../../styles/components/GuideCard.css';
+import '../../styles/components/GuideCard.css'; // Make sure this path matches your setup
 
-/**
- * Props:
- * - guide: Guide object
- * - showDelete: boolean (show delete button)
- * - onDelete: function(guideId)
- * - showDownload: boolean (show download button)
- * - onDownload: function(guide)
- * - isOwner: boolean (is current user owner of the guide)
- * - onShare: function(guide)
- * - onEdit: function(guide)
- */
 const GuideCard = ({
   guide,
   showDelete = false,
@@ -67,7 +56,9 @@ const GuideCard = ({
     if (!onEdit) return;
     onEdit(guide);
   };
+
   const hasActions = showDelete || showDownload || (isOwner && onShare) || (isOwner && onEdit);
+
   const renderBadge = () => {
     if (guide.is_public) {
       return <div className="guide-badge public">Public</div>;
@@ -81,11 +72,8 @@ const GuideCard = ({
   return (
     <div
       className={`guide-card ${isExpanded ? 'expanded' : ''}`}
-      // Click-to-expand only when the card is "read-only" (public explore view)
       onClick={() => {
-        if (!hasActions) {
-          setIsExpanded((prev) => !prev);
-        }
+        if (!hasActions) setIsExpanded((prev) => !prev);
       }}
       style={{ cursor: hasActions ? 'default' : 'pointer' }}
     >
@@ -101,72 +89,92 @@ const GuideCard = ({
       </p>
       <p className="guide-card-description">{guide.description}</p>
       <span className="guide-card-steps">
-        {guide.steps.length}{' '}
-        {guide.steps.length === 1 ? 'Step' : 'Steps'}
+        {guide.steps.length} {guide.steps.length === 1 ? 'Step' : 'Steps'}
       </span>
 
       {hasActions && (
         <div className="guide-card-actions">
-          {/* Show Steps toggle (for "My Guides" page) */}
+          
+          {/* EXPAND STEPS (Arrow) */}
+          {/* EXPAND STEPS */}
           <button
-            className="guide-card-expand-btn"
+            className="icon-btn expand-btn"
+            title={isExpanded ? "Hide Steps" : "Show Steps"}
             onClick={(e) => {
               e.stopPropagation();
               setIsExpanded((prev) => !prev);
             }}
           >
-            {isExpanded ? 'Hide Steps' : 'Show Steps'}
+            <svg className="icon expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
           </button>
 
+          {/* DOWNLOAD */}
           {showDownload && (
             <button
-              className="guide-card-download-btn"
+              className="icon-btn download-btn"
+              title="Download PDF"
               onClick={handleDownloadClick}
             >
-              Download PDF
+              <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
             </button>
           )}
 
+          {/* EDIT */}
           {isOwner && onEdit && (
             <button
-              className="guide-card-edit-btn"
+              className="icon-btn edit-btn"
+              title="Edit Guide"
               onClick={handleEditClick}
             >
-              Edit
+              <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
             </button>
           )}
 
+          {/* SHARE */}
           {isOwner && onShare && (
             <button
-              className="guide-card-share-btn"
+              className="icon-btn share-btn"
+              title="Share Guide"
               onClick={handleShareClick}
             >
-              Share
+              <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+              </svg>
             </button>
           )}
 
+          {/* DELETE */}
           {showDelete && isOwner && (
             <button
-              className="guide-card-delete-btn"
-              aria-label={`Delete ${guide.name}`}
+              className="icon-btn delete-btn"
+              title="Delete Guide"
               onClick={handleDeleteClick}
             >
-              <svg
-                className="delete-icon"
-                viewBox="0 0 24 24"
-                role="img"
-                aria-hidden="true"
-              >
-                <path
-                  d="M9 3h6a1 1 0 0 1 1 1v2h4v2h-1v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8H3V6h4V4a1 1 0 0 1 1-1Zm6 2H9v1h6V5ZM7 8v11h10V8H7Zm3 2h2v7h-2v-7Z"
-                  fill="currentColor"
-                />
+              <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
               </svg>
             </button>
           )}
         </div>
       )}
 
+      {/* Expanded Steps List */}
       {isExpanded && (
         <div className="guide-card-steps-list">
           <h4>Guide Steps:</h4>
@@ -178,42 +186,20 @@ const GuideCard = ({
         </div>
       )}
 
+      {/* Confirmation Dialog */}
       {confirmOpen && (
         <div className="guide-card-confirm" role="dialog" aria-modal="true">
           <div className="confirm-body">
-            <p>
-              Delete “<strong>{guide.name}</strong>”?
-            </p>
+            <p>Delete “<strong>{guide.name}</strong>”?</p>
             <div className="confirm-actions">
-              <button
-                className="confirm-cancel"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setConfirmOpen(false);
-                }}
-              >
-                Keep it
-              </button>
-              <button
-                className="confirm-delete"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setConfirmOpen(false);
-                  onDelete && onDelete(guide.id);
-                }}
-              >
-                Delete
-              </button>
+              <button className="confirm-cancel" onClick={(e) => { e.stopPropagation(); setConfirmOpen(false); }}>Keep it</button>
+              <button className="confirm-delete" onClick={(e) => { e.stopPropagation(); setConfirmOpen(false); onDelete && onDelete(guide.id); }}>Delete</button>
             </div>
           </div>
         </div>
       )}
 
-      {toastVisible && (
-        <div className="copy-toast" role="status" aria-live="polite">
-          Guide shortcut copied
-        </div>
-      )}
+      {toastVisible && <div className="copy-toast" role="status" aria-live="polite">Guide shortcut copied</div>}
     </div>
   );
 };

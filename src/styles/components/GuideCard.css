@@ -1,41 +1,43 @@
 /* src/components/GuideCard.css */
 .guide-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 24px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    cursor: pointer; /* <-- 1. Add pointer cursor */
-    position: relative;
-  }
-  
-  .guide-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  }
-  
-  .guide-card-title {
-    font-size: 22px;
-    color: var(--text-primary);
-    margin: 0 0 8px 0;
-  }
-  
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px; /* Slightly rounder for a modern look */
+  padding: 24px;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  /* Add a subtle inner glow */
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.guide-card:hover {
+  transform: translateY(-4px);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08), 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.guide-card-title {
+  font-size: 22px;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
 .guide-card-shortcut {
   font-family: monospace;
-  font-size: 16px;
-  background-color: var(--bg-light);
+  font-size: 15px;
+  background-color: rgba(232, 124, 50, 0.1); /* Subtly tinted background */
   color: var(--brand-orange);
-  padding: 4px 8px;
+  padding: 4px 10px;
   border-radius: 6px;
   display: inline-block;
   margin-bottom: 16px;
   cursor: pointer;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  transition: all 0.2s ease;
 }
 
 .guide-card-shortcut:hover {
+  background-color: rgba(232, 124, 50, 0.2);
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(232, 124, 50, 0.25);
 }
 
 .copied-dot {
@@ -44,262 +46,256 @@
   font-weight: 700;
 }
 
-.copy-toast {
-  position: absolute;
-  bottom: 12px;
-  right: 14px;
-  background: rgba(0,0,0,0.8);
-  color: #f5f5f5;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 13px;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.25);
-  animation: toast-in 180ms ease-out;
+.guide-card-description {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 20px;
 }
 
-@keyframes toast-in {
-  from { opacity: 0; transform: translateY(6px) scale(0.98); }
+.guide-card-steps {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.05);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* --- BADGES --- */
+.guide-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.guide-badge.public { background: var(--brand-orange); }
+.guide-badge.shared { background: #5a5a72; }
+.guide-badge.private { background: #2A2A36; border: 1px solid rgba(255,255,255,0.1); }
+
+/* --- MODERN ICON BUTTONS --- */
+.guide-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Base style for all icon buttons */
+.icon-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03); 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+
+/* 1. Expand (Chevron) - Soft Cyan */
+.expand-btn {
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.2);
+}
+.expand-btn:hover {
+  background: rgba(56, 189, 248, 0.15);
+  color: #7dd3fc;
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.25);
+}
+
+/* 2. Download - Emerald Green */
+.download-btn {
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.2);
+}
+.download-btn:hover {
+  background: rgba(52, 211, 153, 0.15);
+  color: #6ee7b7;
+  border-color: rgba(52, 211, 153, 0.5);
+  box-shadow: 0 4px 14px rgba(52, 211, 153, 0.25);
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* 3. Edit - Amethyst Purple */
+.edit-btn {
+  color: #a78bfa;
+  border-color: rgba(167, 139, 250, 0.2);
+}
+.edit-btn:hover {
+  background: rgba(167, 139, 250, 0.15);
+  color: #c4b5fd;
+  border-color: rgba(167, 139, 250, 0.5);
+  box-shadow: 0 4px 14px rgba(167, 139, 250, 0.25);
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* 4. Share - NexAura Orange */
+.share-btn {
+  color: #E87C32;
+  border-color: rgba(232, 124, 50, 0.2);
+}
+.share-btn:hover {
+  background: rgba(232, 124, 50, 0.15);
+  color: #fba15f;
+  border-color: rgba(232, 124, 50, 0.5);
+  box-shadow: 0 4px 14px rgba(232, 124, 50, 0.25);
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* 5. Delete - Ruby Red (Pushed to the right) */
+.delete-btn {
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.2);
+  margin-left: auto; 
+}
+.delete-btn:hover {
+  background: rgba(248, 113, 113, 0.15);
+  color: #fca5a5;
+  border-color: rgba(248, 113, 113, 0.5);
+  box-shadow: 0 4px 14px rgba(248, 113, 113, 0.25);
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* --- EXPAND ARROW ANIMATION --- */
+.expand-icon {
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.expanded .expand-icon {
+  transform: rotate(180deg);
+}
+
+/* --- VISIBILITY FIX FOR STEPS TEXT --- */
+.guide-card-steps-list {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  animation: fadeSlideDown 0.3s ease-out forwards;
+}
+
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.guide-card-steps-list h4 {
+  font-size: 16px;
+  color: #ffffff; /* Bright white for headers */
+  margin: 0 0 14px 0;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.guide-card-steps-list ol {
+  margin: 0;
+  padding-left: 20px;
+  color: #cbd5e1; /* Light slate for the numbers */
+}
+
+.guide-card-steps-list li {
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+  color: #f8fafc; /* Crisp, highly readable off-white for the text */
+}
+
+/* --- CONFIRM DIALOG & TOAST (Unchanged) --- */
+.guide-card-confirm {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  animation: confirm-pop 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 10;
+  min-width: 240px;
+}
+
+@keyframes confirm-pop {
+  from { opacity: 0; transform: translateY(10px) scale(0.95); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
-  .guide-card-description {
-    font-size: 16px;
-    color: var(--text-secondary);
-    line-height: 1.6;
-    margin-bottom: 20px;
-  }
-  
-  .guide-card-steps {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-secondary);
-  }
-  
-  /* --- 2. ADD ALL THESE NEW STYLES --- */
-  
-  .guide-card.expanded {
-    /* Optional: make the expanded card slightly larger */
-    transform: scale(1.02);
-  }
-  
-  .guide-card-steps-list {
-    margin-top: 24px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border-color);
-  }
-  
-  .guide-card-steps-list h4 {
-    font-size: 16px;
-    color: var(--text-primary);
-    margin: 0 0 10px 0;
-    font-weight: 600;
-  }
-  
-  .guide-card-steps-list ol {
-    margin: 0;
-    padding-left: 20px; /* Indent the list */
-    color: var(--text-secondary);
-  }
-  
-  .guide-card-steps-list li {
-    font-size: 15px;
-    line-height: 1.7;
-    margin-bottom: 10px;
-  }
-  
-  .guide-card-steps-list li:last-child {
-    margin-bottom: 0;
-  }
 
-  /* src/components/GuideCard.css */
+.confirm-body p {
+  margin: 0 0 12px 0;
+  color: #ffffff;
+  font-size: 14px;
+}
 
-/* ... (all your existing styles are above this) ... */
+.confirm-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
 
-/* --- ADD THESE NEW STYLES --- */
+.confirm-cancel,
+.confirm-delete {
+  border: none;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
 
-.guide-card-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border-color);
-  }
-  
-  .guide-card-expand-btn,
-  .guide-card-delete-btn,
-  .guide-card-download-btn,
-  .guide-card-share-btn {
-    border: none;
-    padding: 8px 14px;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  
-  .guide-card-expand-btn {
-    background-color: var(--border-color);
-    color: var(--text-primary);
-  }
-  
-  .guide-card-expand-btn:hover {
-    background-color: #444;
-  }
+.confirm-cancel {
+  background: rgba(255,255,255,0.1);
+  color: #ffffff;
+}
+.confirm-cancel:hover { background: rgba(255,255,255,0.15); }
 
-  .guide-card-share-btn {
-    background-color: var(--brand-orange);
-    color: #fff;
-  }
+.confirm-delete { background: #f87171; color: #fff; }
+.confirm-delete:hover {
+  background: #ef4444;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(248, 113, 113, 0.3);
+}
 
-  .guide-card-share-btn:hover {
-    background-color: #e87c32;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(232, 124, 50, 0.3);
-  }
-  
-  .guide-card-delete-btn {
-    background-color: transparent;
-    color: var(--brand-red);
-    border: 1px solid var(--brand-red);
-    margin-left: auto; /* Pushes it to the right */
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    border-radius: 50%;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-  }
-  
-  .guide-card-delete-btn:hover {
-    background-color: rgba(217, 59, 59, 0.12);
-    color: #ffb0b0;
-    border-color: #ff8a8a;
-    transform: translateY(-1px) scale(1.05);
-    box-shadow: 0 6px 18px rgba(217, 59, 59, 0.25);
-  }
+.copy-toast {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(232, 124, 50, 0.9);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.3);
+  animation: toast-in-out 1.4s ease-in-out forwards;
+  pointer-events: none;
+}
 
-  .guide-card-delete-btn:active {
-    transform: scale(0.95);
-  }
-
-  .delete-icon {
-    width: 20px;
-    height: 20px;
-    pointer-events: none;
-  }
-
-  /* Confirm dialog */
-  .guide-card-confirm {
-    position: absolute;
-    bottom: 16px;
-    right: 16px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 14px;
-    box-shadow: 0 16px 35px rgba(0, 0, 0, 0.35);
-    animation: confirm-pop 160ms ease-out;
-    z-index: 2;
-    min-width: 220px;
-  }
-
-  @keyframes confirm-pop {
-    from {
-      opacity: 0;
-      transform: translateY(6px) scale(0.97);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
-  .guide-card-confirm .confirm-body {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    color: var(--text-primary);
-    font-size: 14px;
-  }
-
-  .guide-card-confirm .confirm-actions {
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-  }
-
-  .confirm-cancel,
-  .confirm-delete {
-    border: none;
-    padding: 8px 12px;
-    font-size: 13px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
-  }
-
-  .confirm-cancel {
-    background: var(--bg-light);
-    color: var(--text-primary);
-  }
-
-  .confirm-cancel:hover {
-    background: #3c3c3c;
-  }
-
-  .confirm-delete {
-    background: linear-gradient(135deg, #d93b3b 0%, #e87c32 100%);
-    color: #fff;
-    box-shadow: 0 6px 18px rgba(232, 124, 50, 0.35);
-  }
-
-  .confirm-delete:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 10px 24px rgba(232, 124, 50, 0.45);
-  }
-
-  .guide-badge {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #fff;
-  }
-
-  .guide-badge.public {
-    background: var(--brand-orange);
-  }
-
-  .guide-badge.shared {
-    background: #444;
-  }
-
-  .guide-badge.private {
-    background: #222;
-    border: 1px solid #444;
-  }
-
-  .shared-badge {
-    background: #444;
-  }
-
-  .public-badge {
-    background: var(--brand-orange);
-  }
-
-  .guide-card-edit-btn {
-    background-color: var(--bg-light);
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
-  }
-
-  .guide-card-edit-btn:hover {
-    background-color: #444;
-  }
+@keyframes toast-in-out {
+  0% { opacity: 0; transform: translate(-50%, 10px) scale(0.9); }
+  15% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  85% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -10px) scale(0.9); }
+}

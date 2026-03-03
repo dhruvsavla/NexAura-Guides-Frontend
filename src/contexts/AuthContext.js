@@ -1,6 +1,4 @@
-// src/AuthContext.js
-// This is a simple context to hold auth state in React.
-// For now, we'll just check chrome.storage on load.
+// src/contexts/AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext(null);
@@ -10,11 +8,13 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if token exists on load
     if (window.chrome && window.chrome.storage) {
       window.chrome.storage.local.get("nexaura_token", (result) => {
         if (result.nexaura_token) {
           setToken(result.nexaura_token);
+        } else {
+            const localToken = localStorage.getItem("nexaura_token");
+            if (localToken) setToken(localToken);
         }
         setLoading(false);
       });
@@ -29,15 +29,16 @@ export const AuthProvider = ({ children }) => {
 
   const login = (newToken) => {
     setToken(newToken);
-    // Storage is set in LoginPage
+    // 🟢 CRITICAL FIX: Actually save the token so the web app remembers the login!
+    localStorage.setItem("nexaura_token", newToken); 
   };
 
   const logout = () => {
     setToken(null);
+    // 🟢 CRITICAL FIX: Clear it on logout
+    localStorage.removeItem("nexaura_token"); 
     if (window.chrome && window.chrome.storage) {
       window.chrome.storage.local.remove("nexaura_token");
-    } else {
-      localStorage.removeItem("nexaura_token");
     }
   };
 
