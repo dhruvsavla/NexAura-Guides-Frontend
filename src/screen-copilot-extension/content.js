@@ -1445,13 +1445,14 @@
     const res = await new Promise((resolve) => {
     chrome.runtime.sendMessage(
       { type: "SAVE_GUIDE_API", token: token, payload: payload },
-      resolve
-    );
-  });
-    if (!res || !res.ok) {
-      const err = await res.json().catch(() => ({ detail: "unknown" }));
-      throw new Error(err.detail || "Failed to save guide");
-    }
+          resolve
+        );
+      });
+      
+      // 🟢 NEW FIX: Read the error directly from the message payload
+      if (!res || !res.ok) {
+        throw new Error(res?.error || res?.detail || "Failed to save guide");
+      }
     
     //const saved = await res.json();
     
