@@ -37,9 +37,10 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     // 🟢 CRITICAL FIX: Clear it on logout
     localStorage.removeItem("nexaura_token"); 
-    if (window.chrome && window.chrome.storage) {
-      window.chrome.storage.local.remove("nexaura_token");
-    }
+    // if (window.chrome && window.chrome.storage) {
+    //   window.chrome.storage.local.remove("nexaura_token");
+    // }
+    window.postMessage({ type: "NEXAURA_LOGOUT" }, "*");
   };
 
   return (

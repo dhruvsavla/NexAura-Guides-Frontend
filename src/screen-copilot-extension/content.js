@@ -35,15 +35,21 @@
   // ===== LISTEN FOR TOKEN FROM LOGIN PAGE =====
   window.addEventListener("message", (event) => {
     const msg = event.data;
-    if (!msg || msg.type !== "NEXAURA_AUTH_TOKEN") return;
-
-    console.log("Content.js received token from login page:", msg.token);
-
+    if (msg?.type === "NEXAURA_AUTH_TOKEN") {
     chrome.storage.local.set({ nexaura_token: msg.token }, () => {
       console.log("Token stored in chrome.storage.local");
     });
-
     window.postMessage({ type: "NEXAURA_TOKEN_RECEIVED" }, "*");
+    return;
+  }
+
+  // ✅ New logout handler
+  if (msg?.type === "NEXAURA_LOGOUT") {
+    chrome.storage.local.remove("nexaura_token", () => {
+      console.log("NexAura: token cleared on logout");
+    });
+    return;
+  }
   });
   window.addEventListener("message", handleOverlayFrameMessage);
   window.addEventListener("message", handleRepairOverlayMessage);
@@ -1350,6 +1356,10 @@
     const res = await new Promise((resolve) => {
     chrome.runtime.sendMessage({ type: "FETCH_GUIDES_API", token: token }, resolve);
     });
+    if (res.status === 401) {
+      chrome.storage.local.remove("nexaura_token");
+      throw new Error("Session expired. Please log in again.");
+    }
     if (!res || !res.ok) {
     throw new Error(res?.error || "Failed to fetch guides via background script");
     }
@@ -1379,6 +1389,10 @@
       }, resolve);
     });
 
+    if (res.status === 401) {
+      chrome.storage.local.remove("nexaura_token");
+      throw new Error("Session expired. Please log in again.");
+    }
     if (!res || !res.ok) {
       // Backend should return a 404 if not found, which translates to this error
       throw new Error(res?.error || "Guide not found on server.");
@@ -1433,21 +1447,17 @@
       })),
     };
 
-    // const res = await fetch("http://127.0.0.1:8000/api/guides/", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    //   body: JSON.stringify(payload),
-    // });
-
     const res = await new Promise((resolve) => {
     chrome.runtime.sendMessage(
       { type: "SAVE_GUIDE_API", token: token, payload: payload },
           resolve
         );
       });
+
+      if (res.status === 401) {
+        chrome.storage.local.remove("nexaura_token");
+        throw new Error("Session expired. Please log in again.");
+      }
       
       // 🟢 NEW FIX: Read the error directly from the message payload
       if (!res || !res.ok) {
