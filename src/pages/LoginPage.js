@@ -43,7 +43,7 @@ const LoginPage = () => {
       login(token); 
       
       // 🟢 2. Silently notify the extension (Fire-and-forget)
-      window.postMessage({ type: "NEXAURA_AUTH_TOKEN", token: token }, "*"); 
+      window.postMessage({ type: "NEXAURA_AUTH_TOKEN", token: token }, window.location.origin); 
 
       // 🟢 3. Navigate instantly using React Router
       navigate(redirectUrl);

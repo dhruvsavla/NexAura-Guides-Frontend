@@ -1,5 +1,9 @@
 // content.js — page logic + iframe sidebar host
-
+const NEXAURA_WEB_ORIGINS = [
+  "http://localhost:3000",
+  // "https://yourdomain.com"   // replace with your real production domain
+];
+const extensionOrigin = new URL(chrome.runtime.getURL("")).origin;
 (function () {
   if (
     window.location.protocol === "file:" ||
@@ -34,12 +38,13 @@
 
   // ===== LISTEN FOR TOKEN FROM LOGIN PAGE =====
   window.addEventListener("message", (event) => {
+    if (!NEXAURA_WEB_ORIGINS.includes(event.origin)) return;
     const msg = event.data;
     if (msg?.type === "NEXAURA_AUTH_TOKEN") {
     chrome.storage.local.set({ nexaura_token: msg.token }, () => {
       console.log("Token stored in chrome.storage.local");
     });
-    window.postMessage({ type: "NEXAURA_TOKEN_RECEIVED" }, "*");
+    window.postMessage({ type: "NEXAURA_TOKEN_RECEIVED" }, window.location.origin);
     return;
   }
 
@@ -1758,7 +1763,7 @@
       if (overlayPendingState) {
         overlayFrame.contentWindow.postMessage(
           { type: "NEXAURA_SET_STATE", payload: overlayPendingState },
-          "*"
+          extensionOrigin
         );
       } else {
         deliverOverlayState();
@@ -1794,7 +1799,7 @@
     if (overlayFrameReady && overlayFrame.contentWindow) {
       overlayFrame.contentWindow.postMessage(
         { type: "NEXAURA_SET_STATE", payload: overlayPendingState },
-        "*"
+        extensionOrigin
       );
     }
   }
@@ -1826,7 +1831,7 @@
     if (!frame) return;
     repairActive = true;
     frame.style.display = "block";
-    frame.contentWindow?.postMessage({ type: "REPAIR_SHOW", payload }, "*");
+    frame.contentWindow?.postMessage({ type: "REPAIR_SHOW", payload }, extensionOrigin);
   }
 
   function hideRepairOverlay() {

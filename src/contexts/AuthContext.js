@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
     // if (window.chrome && window.chrome.storage) {
     //   window.chrome.storage.local.remove("nexaura_token");
     // }
-    window.postMessage({ type: "NEXAURA_LOGOUT" }, "*");
+    window.postMessage({ type: "NEXAURA_LOGOUT" }, window.location.origin);
   };
 
   return (
